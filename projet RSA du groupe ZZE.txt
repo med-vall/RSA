@@ -1,0 +1,201 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fichier;
+
+import static fichier.test.converture;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Med VALL
+ */
+public class cryptage {
+    //une méthode de puissance
+    public static int pow(int a,int b){
+     //declarer un entier res en 1
+     int res=1;
+     //on lance une boucle qui se commence de 1 et se termine en b pour avoire le a^b
+     for(int i=1;i<=b;i++){
+         //q chaque fois on multiplie la résultat précedent par a pour trouver final,ent le a^b
+       res=res*a;  
+     }
+     //on retoure le resultat
+     return res;
+    }
+    //la méthode qui calcule le PGCD entre 2 entier
+     public static int PGCD(int a,int b){
+         //la déclaration du 2 entiers c et d
+int c,d;
+//l'initiqlisqtion du i
+int i=0;
+//on tourne une boucle while de condition d arret de a=b
+while(a!=b)
+{
+//si a<b 
+if(a<b){
+    //on fait l echange entre a et b
+c=a;
+a=b;
+b=c;
+
+
+}
+//on affecte dans d=a-b
+d=a-b;
+//on met le valeur de d dans a
+a=d;
+
+}
+//aprés on fait retourer le valeur de d qui est maintennant a
+return a;
+}
+     //la méthode converter qui permet de converture la chaine donner en paramétre a une suite des entiers (la code ASCII correspondant)
+      public static String converture(String str){
+        //l'initialisation de la chaine vide  
+          String s="";
+          //pour eviter les exceptions generer par la  methode getBytes
+        try{
+            //on convertie la chaine a sa code ASCII corespondant
+        byte[] bytes = str.getBytes("ASCII"); 
+  
+    // Affichage à l'écran : 
+    for (int i=0; i<bytes.length; i++) { 
+        //on concate le code ASCII
+        s=s+bytes[i];
+        
+    }  
+    //l exception generer par la méthode getBytes("ASCII")
+} catch (java.io.UnsupportedEncodingException e) { 
+    // Le codage n'est pas reconnu. 
+    e.printStackTrace(); 
+}
+return s;
+    }
+      //la méthode qui test est ce que le nombre passer comme un paramtre est un premier ou non
+       public static boolean testPremier(int p){
+           //l'initialisation de i en 2
+int i=2;
+//le parcoure des entiers qui ont inferieur a p/2
+while(i<=p/2)
+{
+    //la teste pour avoire si l une des entiers divise p
+if(p%i==0)
+//si wi il retoure comme résultat false(cad que l entier n est pas premier)
+return false;
+//si non l'entier suivante
+else i++;
+}
+//s'il terminer sans trouver un entier divise p il retoure qu'elle est premier
+return true;
+}
+       //la méthode qui prend un entier premier par hasard
+        public static int hazard(){
+            //comme la méthode rendom return un reél 0<r<1,donc on'a besoine de le miltiplier par un plage trés grand pour tomber si un entier trés grand
+            int max=100000,min=5000;
+            //on cast le nombre retourner par hasard a un nombre entier(on le convertit)
+            int c=(int) (Math.random() * ( max - min ));
+            //le parcours des entier avec une condition présque infinie pour avoire l'entier
+   while(c<max){
+       //le teste de l'entier est ce qu'il est premier ou non
+        if(testPremier(c))
+            //si oui le retourner comme une resultat
+        return c;
+      //si non chercher a une autre entier
+        else
+        c=(int) (Math.random() * ( max - min ));
+              }
+   //finalment retourner le nombre trouver
+    return c;
+       }
+    
+     public static void main (String args[]){
+       //l'affichange d une petite message a l'excution
+       System.out.println(" BIENVENUE DANS LE TP DU GRP ZZE DU RSA");
+      //la déclaration des diffirents paramétres
+       int p,q,n,fi,c,e;
+       //la déclaration des paramétres secondaires
+       String str;int x;
+       //l'affichage d'une petite message pour taper la chaine
+       System.out.println("tapez votre msg SVP:");
+       //Lire la chaine saisie au clavier
+       Scanner sc=new Scanner(System.in);
+       str=sc.nextLine();
+       //trouver é entiers premiers p et q par hasard
+       p=hazard();q=hazard();
+       //l'affichage du p
+       System.out.println("le nombre premier p:"+p); 
+       //l'affichage du q
+       System.out.println("le nombre premier q:"+q);
+       //on les testes a la 2eme fois pour soit etre toujour sur au p et q premiers
+       if(testPremier(p) && testPremier(q)){
+       //le calcule de n
+       n=p*q;
+       //l'affichage du n
+       System.out.println("n vaut:"+n);
+       //calcule de l'indicatrice de l'eur
+       fi=(p-1)*(q-1);
+       //le parcours des entiers qui ont inferieur a n pour trouver une premier ave fi(n)
+       for(int i=2;i<=n;i++){
+           //s'il une entre eux est premier avec fi(n)... 
+          if(PGCD(i,fi)==1){
+              //je le met en e
+              e=i;
+        //aprés je commence le parcours d une autre boucle pour trouver le d
+       for(int j=0;j<=n;j++){
+           //je cherche a l'entier inverse modulo fi(n)
+        if((j*e)%fi==1){
+            //je le met en d  
+          int d=j;
+            //j'affiche le clé e
+          System.out.println("votre cle public e:"+e);
+            //j'affiche le clé d
+          System.out.println("votre cle prive d:"+d);
+          //je convertis la chaine saisie au clavier en code ASCII
+         String str1=converture(str);
+          
+      //pour prendre le taille du code ASCII
+       int tailstr1=str1.length();
+       //pernnons le taille du n
+      String nstr=""+n;
+      //pour decouper la code ASCII par la taille de n mois 1
+     int tail=nstr.length()-1;
+     //l'affichage de votre chaine apres le codage 
+     System.out.println("votre chaine de caractres apres la codage:"+str1);
+     //pour cours la chaine du code ASCII pour le decouper
+     for(int k=0;k<=tailstr1/tail-1;k++){
+     //prend chaque decoupafe a part comme une chaine de caractéres
+     String s=""+str1.subSequence(k*tail,k*tail+tail);
+     //le convertit en entier
+     x=Integer.parseInt(s);
+     //faire le calcule la mathématique pour chiffrer les diffents blocs
+     c=pow(x,e)%n;
+     //si la résultat est elle postive....
+     if(c>0)
+         //le garde et l'affiche
+     System.out.println(c);
+     //si non.....
+     else {
+         //l'augmente par n,pour qu'elle soit etre positive ...
+         c=c+n;
+         //et l'affiche 
+           System.out.println(c);
+     }
+     }
+
+}
+    }
+       //pour arreter le parcours si on trouve e
+  break;
+}
+
+
+}
+
+}
+       //si les entiers choisis n ont pas premiers
+else System.out.println("vous devrez tappez 2 entiers premier!!!");
+     }
+}
+
